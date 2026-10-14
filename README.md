@@ -9,8 +9,7 @@
 
 **Aegis-SOL Protocol** is an enterprise-grade, sub-2ms pre-mempool execution guardrail and cryptographic provenance infrastructure built specifically for autonomous AI agents on Solana.
 
-As decentralized AI (DeAI) agents assume direct control over capital and protocol states, Aegis-SOL introduces a deterministic pre-mempool execution guardrail. It inspects agent transaction payloads in real time with **sub-2ms latency overhead**, preventing logic drift, abnormal slippage, unauthorized token drains, and corrupted instruction execution.
-
+As decentralized AI (DeAI) agents assume direct control over capital and protocol states, Aegis-SOL introduces a deterministic pre-mempool execution guardrail. It inspects agent transaction payloads in real time with **sub-2ms latency overhead**, preventing logic drift, abnormal slippage, unauthorized token drains, and corrupted instruction 
 ---
 
 ## 🏛️ System Architecture
@@ -38,7 +37,7 @@ As decentralized AI (DeAI) agents assume direct control over capital and protoco
                                         ▼
        ┌─────────────────────────────────────────────────────────────────┐
        │               SOLANA MAINNET-BETA / ANCHOR PROGRAM              │
-       └─────────────────────────────────────────────────────────────────┘
+‘’’       └─────────────────────────────────────────────────────────────────┘
 
 **Core Engineering Highlights:**
 1. **Sub-2ms Zero-Copy Ring Buffer:** Lock-less Rust SPSC memory ring buffer parsing raw JSON-RPC transaction payloads in **0.00039 ms mean latency**.
@@ -65,18 +64,19 @@ In a 10,000-run real-time stress test, Aegis-SOL Protocol demonstrated a **p99 w
 ---
 
 ## 🛠️ Quickstart Installation & Usage
-
 ```bash
 # Clone the repository
 git clone [https://github.com/CODEXB1TCH/aegis-sol-protocol.git](https://github.com/CODEXB1TCH/aegis-sol-protocol.git)
 cd aegis-sol-protocol
 
-# Run the asynchronous guardrail sentinel
-python aegis_sentinel.py
-
+⁠# Run the asynchronous guardrail sentinel
+python aegis_sentinel.py⁠
+⁠```⁠
+![Console Output](assets/solana-sentinel-console-v2.png)
+```python
 from aegis_sol import AegisGuard
-
-# Wrap any ElizaOS, Rig, or Python AI agent in 1 line
+⁠# Wrap any ElizaOS, Rig, or Python AI agent in 1 line⁠
 @AegisGuard.protect(max_slippage=0.01, max_lamports=500000000)
 async def execute_agent_trade(payload):
-    return await solana_client.send_transaction(payload)
+⁠    return await solana_client.send_transaction(payload)⁠
+⁠```⁠
