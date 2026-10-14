@@ -37,7 +37,7 @@ As decentralized AI (DeAI) agents assume direct control over capital and protoco
                                         ▼
        ┌─────────────────────────────────────────────────────────────────┐
        │               SOLANA MAINNET-BETA / ANCHOR PROGRAM              │
-       ‘’’└─────────────────────────────────────────────────────────────────┘
+       ```└─────────────────────────────────────────────────────────────────┘
 
 **Core Engineering Highlights:**
 1. **Sub-2ms Zero-Copy Ring Buffer:** Lock-less Rust SPSC memory ring buffer parsing raw JSON-RPC transaction payloads in **0.00039 ms mean latency**.
@@ -71,7 +71,7 @@ cd aegis-sol-protocol
 
 ⁠# Run the asynchronous guardrail sentinel
 python aegis_sentinel.py⁠
-⁠```⁠
+⁠```
 ![Console Output](assets/solana-sentinel-console-v2.png)
 ```python
 from aegis_sol import AegisGuard
@@ -79,4 +79,4 @@ from aegis_sol import AegisGuard
 @AegisGuard.protect(max_slippage=0.01, max_lamports=500000000)
 async def execute_agent_trade(payload):
 ⁠    return await solana_client.send_transaction(payload)⁠
-⁠```⁠
+⁠```
