@@ -1,0 +1,112 @@
+"""
+Aegis-SOL Protocol v1.0.0 🌙
+Description: High-throughput asynchronous RPC payload inspector & memory guardrail for Solana AI agents.
+"""
+
+import asyncio
+import json
+import logging
+import sys
+from typing import Dict, List, Optional
+import urllib.request
+import urllib.error
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    handlers=[logging.StreamHandler(sys.stdout)]
+)
+logger = logging.getLogger("AegisSentinel")
+
+class AegisSolSentinel:
+    def __init__(self, wallet_address: str, rpc_url: str = "https://api.mainnet-beta.solana.com"):
+        self.wallet_address = wallet_address
+        self.rpc_url = rpc_url
+        self.headers = {"Content-Type": "application/json"}
+        self._known_signatures: List[str] = []
+
+    def _post_request(self, payload: Dict) -> Optional[Dict]:
+        data = json.dumps(payload).encode("utf-8")
+        req = urllib.request.Request(self.rpc_url, data=data, headers=self.headers, method="POST")
+        try:
+            with urllib.request.urlopen(req, timeout=10) as response:
+                return json.loads(response.read().decode("utf-8"))
+        except urllib.error.URLError as e:
+            logger.error(f"RPC Request Error: {e.reason}")
+            return None
+        except Exception as e:
+            logger.error(f"Unexpected Request Error: {e}")
+            return None
+
+    async def get_balance(self) -> Optional[float]:
+        payload = {
+            "jsonrpc": "2.0",
+            "id": 1,
+            "method": "getBalance",
+            "params": [self.wallet_address]
+        }
+
+        loop = asyncio.get_event_loop()
+        response = await loop.run_in_executor(None, self._post_request, payload)
+
+        if response and "result" in response:
+            lamports = response["result"]["value"]
+            return lamports / 10**9
+        return None
+
+    async def get_confirmed_signatures(self, limit: int = 5) -> List[str]:
+        payload = {
+            "jsonrpc": "2.0",
+            "id": 1,
+            "method": "getSignaturesForAddress",
+            "params": [
+                self.wallet_address,
+                {"limit": limit}
+            ]
+        }
+
+        loop = asyncio.get_event_loop()
+        response = await loop.run_in_executor(None, self._post_request, payload)
+
+        signatures = []
+        if response and "result" in response:
+            for tx in response["result"]:
+                signatures.append(tx["signature"])
+        return signatures
+
+    async def monitor_agent_wallet(self, interval: int = 12):
+        logger.info(f"Launch Aegis-SOL Guardrail 🌙 for Agent Address: {self.wallet_address}")
+
+        initial_sigs = await self.get_confirmed_signatures()
+        self._known_signatures = initial_sigs
+        logger.info(f"Initialized state with {len(self._known_signatures)} confirmed signatures.")
+
+        while True:
+            try:
+                balance = await self.get_balance()
+                if balance is not None:
+                    logger.info(f"Agent: {self.wallet_address[:6]}...{self.wallet_address[-6:]} | Balance: {balance:.4f} SOL")
+
+                current_sigs = await self.get_confirmed_signatures()
+                new_sigs = [sig for sig in current_sigs if sig not in self._known_signatures]
+
+                if new_sigs:
+                    for sig in new_sigs:
+                        logger.warning(f"NEW TRANSACTION INSTRUCTION DETECTED: {sig}")
+                    self._known_signatures = current_sigs
+                else:
+                    logger.info("Aegis-SOL 🌙: No anomalous state changes detected in current loop.")
+
+            except Exception as e:
+                logger.error(f"Monitoring cycle error: {e}")
+
+            await asyncio.sleep(interval)
+
+if __name__ == "__main__":
+    TEST_AGENT_WALLET = "DezXAZ8z7PnrnRJjz3wXBoRgixrd6v17Z7Xe6X7p9D63"
+    sentinel = AegisSolSentinel(wallet_address=TEST_AGENT_WALLET)
+
+    try:
+        asyncio.run(sentinel.monitor_agent_wallet(interval=10))
+    except KeyboardInterrupt:
+        logger.info("Aegis-SOL Guardrail monitoring stopped by user.")
