@@ -37,8 +37,7 @@ As decentralized AI (DeAI) agents assume direct control over capital and protoco
                                         ▼
        ┌─────────────────────────────────────────────────────────────────┐
        │               SOLANA MAINNET-BETA / ANCHOR PROGRAM              │
-       └─────────────────────────────────────────────────────────────────┘
-‘’’
+       ‘’’└─────────────────────────────────────────────────────────────────┘
 
 **Core Engineering Highlights:**
 1. **Sub-2ms Zero-Copy Ring Buffer:** Lock-less Rust SPSC memory ring buffer parsing raw JSON-RPC transaction payloads in **0.00039 ms mean latency**.
