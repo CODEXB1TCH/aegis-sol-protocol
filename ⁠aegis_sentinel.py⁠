@@ -19,7 +19,7 @@ logging.basicConfig(
 logger = logging.getLogger("AegisSentinel")
 
 class AegisSolSentinel:
-    def __init__(self, wallet_address: str, rpc_url: str = "https://api.mainnet-beta.solana.com"):
+    def __init__(self, wallet_address: str, rpc_url: str = "YOUR_SOLANA_RPC_ENDPOINT"):
         self.wallet_address = wallet_address
         self.rpc_url = rpc_url
         self.headers = {"Content-Type": "application/json"}
